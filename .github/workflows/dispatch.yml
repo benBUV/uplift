@@ -1,13 +1,16 @@
+name: build-request
+
 on:
   push:
     branches:
       - main
 
 jobs:
-  trigger_private_workflow:
+  build_request:
     runs-on: ubuntu-latest
+    outputs:
+      json_contents: ${{ steps.read_json.outputs.json_contents }}
     steps:
-
       - name: Find JSON files and read contents
         id: read_json
         run: |
@@ -20,14 +23,14 @@ jobs:
             rm "$json_file"
           done
 
-          # Write JSON contents to an environment file
-          echo "::set-env name=JSON_CONTENTS::$json_contents"
+      - name: Set JSON Contents
+        run: echo "JSON_CONTENTS=$json_contents" >> $GITHUB_ENV
 
       - name: Trigger Private Workflow
         run: |
-          # Send the dispatch request with the environment variable
+          # Send the dispatch request
           curl -X POST \
             -H "Authorization: token ${{ secrets.UPLIFT_DISPATCH }}" \
             -H "Accept: application/vnd.github.everest-preview+json" \
-            -d '{"event_type": "build-request", "data": "'"$(cat JSON_CONTENTS)"'"}' \
+            -d '{"event_type": "build-request"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
