@@ -26,6 +26,7 @@ jobs:
             echo "Processing JSON file: $json_file"
             json_contents=$(cat "$json_file")
             echo "JSON contents: $json_contents"
+          done
       - name: Trigger Private Workflow
         run: |
           # Send the dispatch request
