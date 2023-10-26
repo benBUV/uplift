@@ -1,32 +1,21 @@
 name: build-request
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
+    inputs:
+      json_filename:
+        description: 'Name of the JSON file'
+        required: true
 
 jobs:
   build_request:
     runs-on: ubuntu-latest
-    outputs:
-      json_contents: ${{ steps.read_json.outputs.json_contents }}
     steps:
-      - name: Find JSON files and read contents
-        id: read_json
+      - name: Fetch JSON Content
         run: |
-          echo "Finding JSON files..."
-          json_files=$(find -name '*.json')  
-          json_contents=""
-          for json_file in $json_files; do
-            echo "Processing JSON file: $json_file"
-            json_contents=$(cat "$json_file")
-            rm "$json_file"
-          done
-      - name: Set JSON Contents
-        run: |
+          json_filename=${{ github.event.inputs.json_filename }}
+          json_contents=$(curl -sL "https://raw.githubusercontent.com/benBUV/uplift/main/$json_filename")
           echo "JSON_CONTENTS=$json_contents" >> $GITHUB_ENV
-      - name: JSON Contents
-        run: |
           echo "JSON Contents: $JSON_CONTENTS"
       - name: Trigger Private Workflow
         run: |
