@@ -22,7 +22,7 @@ jobs:
         with:
           repository: "benBUV/uplift"  
 
-      - name: Parse JSON and make API calls
+      - name: Parse JSON
         run: |
           echo "Finding JSON files..."
           json_files=$(find main -name '*.json')  
@@ -37,5 +37,5 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.UPLIFT_DISPATCH }}" \
             -H "Accept: application/vnd.github.everest-preview+json" \
-            -d '{"event_type": "build-request", "data": "$json_contents"}' \
+            -d '{"event_type": "build-request", "data": "'$json_contents'"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
