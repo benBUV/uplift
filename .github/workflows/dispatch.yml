@@ -24,7 +24,8 @@ jobs:
           done
 
       - name: Set JSON Contents
-        run: echo "JSON_CONTENTS=$json_contents" >> $GITHUB_ENV
+        run: |
+          echo "JSON_CONTENTS=$json_contents" >> $GITHUB_ENV
 
       - name: Trigger Private Workflow
         run: |
