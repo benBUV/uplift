@@ -8,9 +8,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Private Workflow
-        uses: benBUV/canvas@main
-
-        with:
-          token: ${{ secrets.UPLIFT_DISPATCH }}
-          repository: benBUV/canvas
-          event-type: build-request
+        run: |
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.UPLIFT_DISPATCH }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -d '{"event_type": "build-request"}' \
+            https://api.github.com/repos/benBUV/canvas/dispatches
