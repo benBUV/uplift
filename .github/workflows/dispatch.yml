@@ -35,3 +35,27 @@ jobs:
             -H "Accept: application/vnd.github.everest-preview+json" \
             -d '{"event_type": "build-request"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
+
+  api_call:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Debug: Print JSON_CONTENTS
+        run: |
+          echo "JSON_CONTENTS: $JSON_CONTENTS"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: '16'
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: "benBUV/canvas"  # Repository containing 'app.py'
+
+      - name: Run Python Script
+        run: |
+          python uplift/app.py "$JSON_CONTENTS" "$ACCESS_TOKEN"
