@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Trigger Private Workflow
-        uses: benBUV/canvas/uplift-course-build
+        uses: benBUV/canvas@main
 
         with:
           token: ${{ secrets.UPLIFT_DISPATCH }}
