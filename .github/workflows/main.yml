@@ -1,0 +1,15 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  trigger_private_workflow:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Private Workflow
+        uses: actions/trigger-repo-dispatch@v1
+        with:
+          token: ${{ secrets.UPLIFT_DISPATCH }}
+          repository: benBUV/canvas
+          event-type: build-request
