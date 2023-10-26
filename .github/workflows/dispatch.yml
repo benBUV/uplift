@@ -12,26 +12,11 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Set up Node.js
-        uses: actions/setup-node@v2.5.2
-        with:
-          node-version: '16'
-          
-      - name: Parse JSON
-        run: |
-          echo "Finding JSON files..."
-          json_files=$(find -name '*.json')  
-
-          for json_file in $json_files; do
-            echo "Processing JSON file: $json_file"
-            json_contents=$(cat "$json_file")
-            echo "JSON contents: $json_contents"
-          done
       - name: Trigger Private Workflow
         run: |
           # Send the dispatch request
           curl -X POST \
             -H "Authorization: token ${{ secrets.UPLIFT_DISPATCH }}" \
             -H "Accept: application/vnd.github.everest-preview+json" \
-            -d '{"event_type": "build-request", "data": "'$json_contents'"}' \
+            -d '{"event_type": "build-request"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
