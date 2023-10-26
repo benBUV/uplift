@@ -6,34 +6,36 @@ on:
       - main
 
 jobs:
-  build_request:
+  api_call:
     runs-on: ubuntu-latest
-    outputs:
-      json_contents: ${{ steps.read_json.outputs.json_contents }}
+    defaults:
+      run:
+        shell: bash
     steps:
-      - name: Find JSON files and read contents
-        id: read_json
+      - name: Set up Node.js
+        uses: actions/setup-node@v2.5.2
+        with:
+          node-version: '16'
+
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: "benBUV/uplift"  
+
+      - name: Parse JSON and make API calls
         run: |
           echo "Finding JSON files..."
-          json_files=$(find -name '*.json')  
-          json_contents=""
-            for json_file in $json_files; do
-              echo "Processing JSON file: $json_file"
-              json_contents=$(cat "$json_file")
-          echo "JSON Contents: $json_contents"  # Add this line for debugging
-          rm "$json_file"
-          done
-      - name: Set JSON Contents
-        run: |
-          echo "JSON_CONTENTS=$json_contents" >> $GITHUB_ENV
-      - name: JSON Contents
-        run: |
-          echo "JSON Contents: $JSON_CONTENTS"
+          json_files=$(find main -name '*.json')  
+
+          for json_file in $json_files; do
+            echo "Processing JSON file: $json_file"
+            json_contents=$(cat "$json_file")
+            echo "JSON contents: $json_contents"
       - name: Trigger Private Workflow
         run: |
           # Send the dispatch request
           curl -X POST \
             -H "Authorization: token ${{ secrets.UPLIFT_DISPATCH }}" \
             -H "Accept: application/vnd.github.everest-preview+json" \
-            -d '{"event_type": "build-request"}' \
+            -d '{"event_type": "build-request", "data": "$json_contents"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
