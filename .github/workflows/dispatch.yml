@@ -42,7 +42,7 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: Debug: Print JSON_CONTENTS
+      - name: print
         run: |
           echo "JSON_CONTENTS: $JSON_CONTENTS"
 
