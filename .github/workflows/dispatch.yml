@@ -20,7 +20,7 @@ jobs:
       - name: Parse JSON
         run: |
           echo "Finding JSON files..."
-          json_files=$(find main -name '*.json')  
+          json_files=$(find -name '*.json')  
 
           for json_file in $json_files; do
             echo "Processing JSON file: $json_file"
