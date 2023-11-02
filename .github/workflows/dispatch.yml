@@ -23,9 +23,9 @@ jobs:
 
           # Check if the commit message starts with 'Build'
           if [[ $commit_message == Build* ]]; then
-            echo "Commit message starts with 'Build'. Continuing with workflow."
+            echo "Build"
           else
-            echo "Commit message does not start with 'Build'. Exiting workflow."
+            echo "No request"
             exit 78  # Exit with a neutral status code
           fi
 
