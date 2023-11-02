@@ -12,7 +12,22 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Check Commit Message
+        id: commit_message
+        run: |
+          # Get the latest commit message for the pushed commit
+          commit_message=$(git log -1 --pretty=format:%s)
+
+          # Check if the commit message starts with 'build'
+          if [[ $commit_message == build* ]]; then
+            echo "Commit message starts with 'build'. Continuing with workflow."
+          else
+            echo "Commit message does not start with 'build'. Exiting workflow."
+            exit 78  # Exit with a neutral status code
+          fi
+
       - name: Trigger Private Workflow
+        if: steps.commit_message.run == "Commit message starts with 'build'."
         run: |
           # Send the dispatch request
           curl -X POST \
@@ -20,4 +35,3 @@ jobs:
             -H "Accept: application/vnd.github.everest-preview+json" \
             -d '{"event_type": "build-request"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
- 
