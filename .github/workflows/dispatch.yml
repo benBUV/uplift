@@ -38,3 +38,8 @@ jobs:
             -H "Accept: application/vnd.github.everest-preview+json" \
             -d '{"event_type": "build-request"}' \
             https://api.github.com/repos/benBUV/canvas/dispatches
+
+      - name: Debug Commit Message
+        run: |
+          echo "Commit message: ${{ steps.commit_message.outputs.commit_message }}"
+
