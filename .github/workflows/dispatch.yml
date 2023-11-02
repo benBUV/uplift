@@ -12,6 +12,9 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
       - name: Check Commit Message
         id: commit_message
         run: |
