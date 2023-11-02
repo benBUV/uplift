@@ -23,14 +23,14 @@ jobs:
 
           # Check if the commit message starts with 'Build'
           if [[ $commit_message == Build* ]]; then
-            echo "Commit message starts with 'build'. Continuing with workflow."
+            echo "Commit message starts with 'Build'. Continuing with workflow."
           else
-            echo "Commit message does not start with 'build'. Exiting workflow."
+            echo "Commit message does not start with 'Build'. Exiting workflow."
             exit 78  # Exit with a neutral status code
           fi
 
       - name: Trigger Private Workflow
-        if: contains(steps.commit_message.outputs.commit_message, 'build')
+        if: contains(steps.commit_message.outputs.commit_message, 'Build')
         run: |
           # Send the dispatch request
           curl -X POST \
