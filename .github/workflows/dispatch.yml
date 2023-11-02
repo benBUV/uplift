@@ -20,13 +20,13 @@ jobs:
         run: |
           # Get the latest commit message for the pushed commit
           commit_message=$(git log -1 --pretty=format:%s)
-
+          echo "::set-output name=commit_message::$commit_message"  # Set the output variable
           # Check if the commit message starts with 'Build'
           if [[ $commit_message == Build* ]]; then
             echo "Build"
           else
-            echo "No request"
-            exit 78  # Exit with a neutral status code
+            echo "Exiting workflow."
+            exit 78  
           fi
 
       - name: Trigger Private Workflow
