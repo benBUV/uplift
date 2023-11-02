@@ -12,7 +12,19 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: Check for file addition
+        id: file_check
+        run: |
+          # Check if any files have been added in the push
+          if git diff --name-status ${{ github.event.before }} ${{ github.sha }} | grep -qE '^A'; then
+            echo "Files were added in this push."
+          else
+            echo "No files added in this push. Exiting workflow."
+            exit 78  # Exit with a neutral status code
+          fi
+
       - name: Trigger Private Workflow
+        if: steps.file_check.run == 'Files were added in this push.'
         run: |
           # Send the dispatch request
           curl -X POST \
