@@ -21,8 +21,8 @@ jobs:
           # Get the latest commit message for the pushed commit
           commit_message=$(git log -1 --pretty=format:%s)
 
-          # Check if the commit message starts with 'build'
-          if [[ $commit_message == build* ]]; then
+          # Check if the commit message starts with 'Build'
+          if [[ $commit_message == Build* ]]; then
             echo "Commit message starts with 'build'. Continuing with workflow."
           else
             echo "Commit message does not start with 'build'. Exiting workflow."
