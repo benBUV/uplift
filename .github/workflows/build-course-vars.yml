@@ -1,9 +1,11 @@
-# schedule.yml
+on:
+  schedule:
+    - cron: "0 */2 * * *"
 
 jobs:
-  - name: Uplift constructor
-    schedule:
-      every: 2h
+  run_script:
+    runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
@@ -16,11 +18,11 @@ jobs:
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
-        working-directory: path/to/your/repository
+        working-directory: uplift
 
       - name: Run Script for Each JSON File
         run: |
-          for file in path/to/your/repository/*.json; do
-            python your_script.py "$file"
+          for file in uplift/headers/*.json; do
+            python uplift/your_script.py "$file"
           done
-        working-directory: path/to/your/repository
+        working-directory: uplift
