@@ -1,0 +1,26 @@
+# schedule.yml
+
+jobs:
+  - name: Uplift constructor
+    schedule:
+      every: 2h
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+        working-directory: path/to/your/repository
+
+      - name: Run Script for Each JSON File
+        run: |
+          for file in path/to/your/repository/*.json; do
+            python your_script.py "$file"
+          done
+        working-directory: path/to/your/repository
