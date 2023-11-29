@@ -25,6 +25,7 @@ jobs:
       - name: Run Script for Each JSON File
         run: |
           for file in uplift/headers/*.json; do
+            echo "Processing file: $file"
             python uplift/your_script.py "$file"
           done
         working-directory: uplift
