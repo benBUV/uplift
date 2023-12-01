@@ -1,32 +1,47 @@
-name: course-build
+name: uplift-2-build
 
 on:
   schedule:
     - cron: "0 */2 * * *"
   workflow_dispatch:
+  push:
+    branches:
+      - main
 
 jobs:
-  run_script:
+  api_call:
     runs-on: ubuntu-latest
-
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-
-      - name: Install dependencies
+      - name: Check Commit Message
+        id: commit_message
         run: |
-          pip install -r requirements.txt
-        working-directory: uplift
+          # Get the latest commit message for the pushed commit
+          commit_message=$(git log -1 --pretty=format:%s)
+          echo "::set-output name=commit_message::$commit_message"  # Set the output variable
+          # Check if the commit message starts with 'Construct'
+          if [[ $commit_message == Construct* ]]; then
+            echo "Construct"
+          else
+            echo "Exiting workflow."
+            exit 78  
+          fi
 
-      - name: Run Script for Each JSON File
+      - name: Trigger Private Workflow
+        if: contains(steps.commit_message.outputs.commit_message, 'Construct')
         run: |
-          for file in uplift/headers/*.json; do
-            echo "Processing file: $file"
-            python uplift/your_script.py "$file"
-          done
-        working-directory: uplift
+          # Send the dispatch request
+          curl -X POST \
+            -H "Authorization: token ${{ secrets.UPLIFT_DISPATCH }}" \
+            -H "Accept: application/vnd.github.everest-preview+json" \
+            -d '{"event_type": "construct-request"}' \
+            https://api.github.com/repos/benBUV/canvas/dispatches
+
+      - name: Debug Commit Message
+        run: |
+          echo "Commit message: ${{ steps.commit_message.outputs.commit_message }}"
