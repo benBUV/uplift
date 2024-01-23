@@ -20,7 +20,7 @@ jobs:
         run: |
           # Get the latest commit message for the pushed commit
           commit_message=$(git log -1 --pretty=format:%s)
-          echo "::set-output name=commit_message::$commit_message"  # Set the output variable
+          echo "${{ format('::{0}::{1}', 'set-output name=commit_message', $commit_message) }}"  # Set the output variable
           # Check if the commit message starts with 'Build'
           if [[ $commit_message == Build* ]]; then
             echo "Build"
@@ -29,8 +29,11 @@ jobs:
             exit 78  
           fi
 
+      - name: Save Commit Message to State
+        run: echo "commit_message=${{ steps.commit_message.outputs.commit_message }}" >> $GITHUB_STATE
+
       - name: Trigger Private Workflow
-        if: contains(steps.commit_message.outputs.commit_message, 'Build')
+        if: contains(env.GITHUB_STATE_commit_message, 'Build')
         run: |
           # Send the dispatch request
           curl -X POST \
@@ -41,5 +44,4 @@ jobs:
 
       - name: Debug Commit Message
         run: |
-          echo "Commit message: ${{ steps.commit_message.outputs.commit_message }}"
-
+          echo "Commit message: ${{ env.GITHUB_STATE_commit_message }}"
