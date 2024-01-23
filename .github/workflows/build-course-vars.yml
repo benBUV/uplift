@@ -26,6 +26,7 @@ jobs:
           # Get the latest commit message for the pushed commit
           commit_message=$(git log -1 --pretty=format:%s)
           echo "commit_message=${commit_message}" >> $GITHUB_ENV  # Set an environment variable
+          echo "Commit message: $commit_message"  # Debug statement
           # Check if the commit message starts with 'Construct'
           if [[ $commit_message == Construct* ]]; then
             echo "Construct"
