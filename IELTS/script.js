@@ -2,6 +2,8 @@
     var targetDiv = document.querySelector('.buv-hello-world');
     if (targetDiv) {
         console.log('Hello World');
+    } else {
+        console.log('Script  running. No div found')
     }
 })();
 
